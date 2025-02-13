@@ -21,20 +21,20 @@
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://example.com/tags/mini-lsm/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="Jieyou Zhao">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/tags/mini-lsm/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"en","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":"","permalink":"","path":"tags/mini-lsm/index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hexo</title>
+<title>Tag: mini-lsm | Hexo</title>
   
 
 
@@ -64,7 +64,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Hexo</h1>
+      <p class="site-title">Hexo</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -132,115 +132,50 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
-
-    
+    <div class="main-inner tag posts-collapse">
 
 
-<div class="post-block">
   
   
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/13/mini-lsm%20week1day1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jieyou Zhao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Hexo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/02/13/mini-lsm%20week1day1/" class="post-title-link" itemprop="url">mini-lsm Week1 Day1</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-02-13 23:04:33" itemprop="dateCreated datePublished" datetime="2025-02-13T23:04:33+08:00">2025-02-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-02-14 01:11:10" itemprop="dateModified" datetime="2025-02-14T01:11:10+08:00">2025-02-14</time>
-    </span>
-
   
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="Task1-Skiplist-Memtable"><a href="#Task1-Skiplist-Memtable" class="headerlink" title="Task1: Skiplist Memtable"></a>Task1: Skiplist Memtable</h3><p>task1主要实现了 memtable 的相关操作，比较简单。</p>
-<p>较为值得注意的事情是用了两个库: Bytes and Crossbeam skiplist, 其中 crossbeam 的跳表是线程安全的，这意味在 task2 中实现多线程的读写锁部分的时候无需获取写锁，使用读锁即可</p>
-<h3 id="Task2-A-Single-Memtable-in-the-Engie"><a href="#Task2-A-Single-Memtable-in-the-Engie" class="headerlink" title="Task2: A Single Memtable in the Engie"></a>Task2: A Single Memtable in the Engie</h3><p>先理清一下 mini-lsm 的结构关系：</p>
-<p>Mini-lsm –&gt; LsmStorageInner –&gt; LsmStorageState</p>
-<p>LsmStorageState中存储有 memtable 和 SStable</p>
-<p>task2 实现了 LsmStorageInner 中的 get put 和 delete 方法，由于更新都会在 memtable 中更新，因此只需要调用 task1 中实现的方法即可。</p>
-<p>get 方法需要跳过空 value 值</p>
-<p>为了保证线程安全，这里显而需要加一个读写锁，然而需要注意的是 put 和 delete 方法都不需要加写锁，原因如上所示。</p>
-<p>但我认为这里使用读锁仍然可能会出现一个问题：你无法保证put的调用顺序和你期望的一致，因为不同线程花费的时间可能不一样？</p>
-<h3 id="Task3-Write-Path-Freezing-a-Memtable"><a href="#Task3-Write-Path-Freezing-a-Memtable" class="headerlink" title="Task3: Write Path - Freezing a Memtable"></a>Task3: Write Path - Freezing a Memtable</h3><p>task3 主要描述了 freeze memtable 的策略，当 memtable 的 approximate size 大于一个参数的时候，需要冻结到 immutable_memtables 里。</p>
-<p>具体冻结策略的原因可以在官网上查看，总之我们需要实现一个针对 LsmStorageInner 的互斥锁来确保不会有空的 memtable被冻结过去。</p>
-<h3 id="Task4"><a href="#Task4" class="headerlink" title="Task4"></a>Task4</h3><p>纯水</p>
-<h3 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h3><ul>
-<li>为什么memtable中不提供delete api？</li>
-</ul>
-<p>我认为是因为在当前memtable中delete掉了后，如果在之前的memtable或sstable中存在这个key，无法确认是否被delete掉了</p>
-<ul>
-<li>还有啥数据结构当memtable？</li>
-</ul>
-<p>有序的都行，平衡树啥的乱七八糟的</p>
-<ul>
-<li>为什么还要一个互斥锁？</li>
-</ul>
-<p>上面说的很清楚了</p>
-<ul>
-<li>parking_lot的锁</li>
-</ul>
-<p>是公平锁，但可能发生读锁，不要在单线程内递归获取读锁。</p>
-<ul>
-<li>冻结了memtable之后其他线程还能往新刷进去的memtable里写么？</li>
-</ul>
-<p>显然不能，冻结的时候获取写锁了，肯定所有读锁都释放了</p>
+  <div class="post-block">
+    <div class="post-content">
+      <div class="collection-title">
+        <h1 class="collection-header">mini-lsm
+          <small>Tag</small>
+        </h1>
+      </div>
 
       
+    <div class="collection-year">
+      <span class="collection-header">2025</span>
     </div>
 
-    
-    
-    
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2025-02-13T23:04:33+08:00"
+              content="2025-02-13">
+          02-13
+        </time>
+      </div>
 
-    <footer class="post-footer">
-        <div class="post-eof"></div>
+      <div class="post-title">
+          <a class="post-title-link" href="/2025/02/13/mini-lsm%20week1day1/" itemprop="url">
+            <span itemprop="name">mini-lsm Week1 Day1</span>
+          </a>
+      </div>
+
       
-    </footer>
+    </header>
   </article>
-</div>
 
-
-
-
+    </div>
+  </div>
+  
+  
+  
 
 </div>
   </main>
