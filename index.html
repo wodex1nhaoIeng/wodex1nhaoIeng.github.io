@@ -111,7 +111,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -133,6 +133,88 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/16/wekk1-day7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jieyou Zhao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不赖">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 不赖">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/02/16/wekk1-day7/" class="post-title-link" itemprop="url">Mini-LSM Week1 Day7</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-02-16 03:01:50 / Modified: 03:13:32" itemprop="dateCreated datePublished" datetime="2025-02-16T03:01:50+08:00">2025-02-16</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="Task-1-Bloom-Filter"><a href="#Task-1-Bloom-Filter" class="headerlink" title="Task 1: Bloom Filter"></a>Task 1: Bloom Filter</h3><p>代码实现挺简单的，需要先学一下<a href="%22https://samwho.dev/bloom-filters/%22">布隆过滤器的原理</a></p>
+<p>总共有 k 个哈希函数，哈希函数的实现在课程中已经给出了</p>
+<h3 id="Task-2-Integrate-Bloom-Filter-on-the-Read-Path"><a href="#Task-2-Integrate-Bloom-Filter-on-the-Read-Path" class="headerlink" title="Task 2: Integrate Bloom Filter on the Read Path"></a>Task 2: Integrate Bloom Filter on the Read Path</h3><p>Task2 用于在读取中使用布隆过滤器</p>
+<ul>
+<li>在 SST 中存储所有出现过的 key 的哈希值</li>
+<li>在 encode 的时候加入布隆过滤器的信息，即在 build table 的时候加入 bloom 中的 encode 数据</li>
+<li>在 get 的时候也要使用布隆过滤器过滤一下</li>
+</ul>
+<h3 id="Task-3-Key-Prefix-Encoding-Decoding"><a href="#Task-3-Key-Prefix-Encoding-Decoding" class="headerlink" title="Task 3: Key Prefix Encoding + Decoding"></a>Task 3: Key Prefix Encoding + Decoding</h3><ul>
+<li>这个部分感觉意义不是很大，可以在一个 block 中少存一段 key 的数据，将相同的数据过滤一下</li>
+<li>encode 的数据改为 overlap length, rest_length, rest_data 即可。</li>
+<li>需要注意的是第一个 key 不要计算 overlap</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -178,7 +260,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-02-14 01:16:09" itemprop="dateModified" datetime="2025-02-14T01:16:09+08:00">2025-02-14</time>
+      <time title="Modified: 2025-02-16 03:13:47" itemprop="dateModified" datetime="2025-02-16T03:13:47+08:00">2025-02-16</time>
     </span>
 
   
@@ -200,6 +282,7 @@
 <p>get 方法需要跳过空 value 值</p>
 <p>为了保证线程安全，这里显而需要加一个读写锁，然而需要注意的是 put 和 delete 方法都不需要加写锁，原因如上所示。</p>
 <p>但我认为这里使用读锁仍然可能会出现一个问题：你无法保证put的调用顺序和你期望的一致，因为不同线程花费的时间可能不一样？</p>
+<p>P.S. 无法保证一致</p>
 <h3 id="Task3-Write-Path-Freezing-a-Memtable"><a href="#Task3-Write-Path-Freezing-a-Memtable" class="headerlink" title="Task3: Write Path - Freezing a Memtable"></a>Task3: Write Path - Freezing a Memtable</h3><p>task3 主要描述了 freeze memtable 的策略，当 memtable 的 approximate size 大于一个参数的时候，需要冻结到 immutable_memtables 里。</p>
 <p>具体冻结策略的原因可以在官网上查看，总之我们需要实现一个针对 LsmStorageInner 的互斥锁来确保不会有空的 memtable被冻结过去。</p>
 <h3 id="Task4"><a href="#Task4" class="headerlink" title="Task4"></a>Task4</h3><p>纯水</p>
