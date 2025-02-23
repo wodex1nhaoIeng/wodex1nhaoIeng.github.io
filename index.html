@@ -111,7 +111,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -133,6 +133,85 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/17/week1-day2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jieyou Zhao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不赖">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 不赖">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/02/17/week1-day2/" class="post-title-link" itemprop="url">Mini-LSM Week1 Day1</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-02-17 00:40:58" itemprop="dateCreated datePublished" datetime="2025-02-17T00:40:58+08:00">2025-02-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-02-24 02:53:14" itemprop="dateModified" datetime="2025-02-24T02:53:14+08:00">2025-02-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="Task-1-Memtable-Iterator"><a href="#Task-1-Memtable-Iterator" class="headerlink" title="Task 1: Memtable Iterator"></a>Task 1: Memtable Iterator</h3><p>首先要弄清楚一点: 自我引用，在ouroboros库中。标志着跳表的iter至少能活过memtable Iterator的生命周期。</p>
+<p>在整个 Mini-LSM 中，所有的 iterator 都实现了 storageiterator 这个 trait。</p>
+<h3 id="Task-2-Merge-Iterator"><a href="#Task-2-Merge-Iterator" class="headerlink" title="Task 2: Merge Iterator"></a>Task 2: Merge Iterator</h3><p>Merge Iterator 的作用是把一堆 iter 合并起来，你现在拥有一个 memtable 和多个 imm_memtable ，你希望在他们中顺序遍历，则需要对每一个 memtable 都生成一个 Iterator。<br> 再用 Merge Iterator 把他们包裹起来顺序遍历。</p>
+<p>具体实现没什么难的，只需要写一个堆，这里教程给的代码写复杂了，有时间修正一下，current 这个参数是完全不必要的。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
