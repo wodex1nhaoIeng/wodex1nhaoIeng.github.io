@@ -111,7 +111,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -133,6 +133,87 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/07/week1-day3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jieyou Zhao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不赖">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 不赖">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/03/07/week1-day3/" class="post-title-link" itemprop="url">Mini-LSM Week1 Day3</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-03-07 01:57:13" itemprop="dateCreated datePublished" datetime="2025-03-07T01:57:13+08:00">2025-03-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-03-23 16:52:31" itemprop="dateModified" datetime="2025-03-23T16:52:31+08:00">2025-03-23</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="Task-1-Block-Builder"><a href="#Task-1-Block-Builder" class="headerlink" title="Task 1: Block Builder"></a>Task 1: Block Builder</h3><p>Block 仅存在于磁盘上， 他是一个 sstable 的单位，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">----------------------------------------------------------------------------------------------------</span><br><span class="line">|             Data Section             |              Offset Section             |      Extra      |</span><br><span class="line">----------------------------------------------------------------------------------------------------</span><br><span class="line">| Entry #1 | Entry #2 | ... | Entry #N | Offset #1 | Offset #2 | ... | Offset #N | num_of_elements |</span><br><span class="line">----------------------------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-----------------------------------------------------------------------</span><br><span class="line">|                           Entry #1                            | ... |</span><br><span class="line">-----------------------------------------------------------------------</span><br><span class="line">| key_len (2B) | key (keylen) | value_len (2B) | value (varlen) | ... |</span><br><span class="line">-----------------------------------------------------------------------</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如上所示，我们需要确定每个 keylen valuelen， offset 都是 u16，这样就可以轻松计算整个 block 的大小和每个 pair 所处的位置了。 </p>
+<p>然而需要注意的是，block 里的 Key 在 W1D7 之后就会被替换成和 first_key 不重叠的部分（首部不重叠），当然 first_key 仍旧会是完整的。</p>
+<h3 id="Task-2-Block-Iterator"><a href="#Task-2-Block-Iterator" class="headerlink" title="Task 2: Block Iterator"></a>Task 2: Block Iterator</h3><p>非常简单，Block 内部数据是有序的，直接二分查找就行，而且应当是无重叠的。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 

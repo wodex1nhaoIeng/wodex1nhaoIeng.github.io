@@ -19,27 +19,26 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Task1: Skiplist Memtabletask1主要实现了 memtable 的相关操作，比较简单。 较为值得注意的事情是用了两个库: Bytes and Crossbeam skiplist, 其中 crossbeam 的跳表是线程安全的，这意味在 task2 中实现多线程的读写锁部分的时候无需获取写锁，使用读锁即可 Task2: A Single Memtable in the En">
+    <meta name="description" content="Task 1: Block BuilderBlock 仅存在于磁盘上， 他是一个 sstable 的单位， 1234567891011121314----------------------------------------------------------------------------------------------------|             Data Section">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mini-LSM Week1 Day1">
-<meta property="og:url" content="http://example.com/2025/02/13/mini-lsm%20week1day1/index.html">
+<meta property="og:title" content="Mini-LSM Week1 Day3">
+<meta property="og:url" content="http://example.com/2025/03/07/week1-day3/index.html">
 <meta property="og:site_name" content="不赖">
-<meta property="og:description" content="Task1: Skiplist Memtabletask1主要实现了 memtable 的相关操作，比较简单。 较为值得注意的事情是用了两个库: Bytes and Crossbeam skiplist, 其中 crossbeam 的跳表是线程安全的，这意味在 task2 中实现多线程的读写锁部分的时候无需获取写锁，使用读锁即可 Task2: A Single Memtable in the En">
+<meta property="og:description" content="Task 1: Block BuilderBlock 仅存在于磁盘上， 他是一个 sstable 的单位， 1234567891011121314----------------------------------------------------------------------------------------------------|             Data Section">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-02-13T15:04:33.000Z">
-<meta property="article:modified_time" content="2025-02-15T19:13:47.841Z">
+<meta property="article:published_time" content="2025-03-06T17:57:13.000Z">
+<meta property="article:modified_time" content="2025-03-23T08:52:31.093Z">
 <meta property="article:author" content="Jieyou Zhao">
-<meta property="article:tag" content="Mini-LSM">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2025/02/13/mini-lsm%20week1day1/">
+<link rel="canonical" href="http://example.com/2025/03/07/week1-day3/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2025/02/13/mini-lsm%20week1day1/","path":"2025/02/13/mini-lsm week1day1/","title":"Mini-LSM Week1 Day1"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2025/03/07/week1-day3/","path":"2025/03/07/week1-day3/","title":"Mini-LSM Week1 Day3"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Mini-LSM Week1 Day1 | 不赖</title>
+<title>Mini-LSM Week1 Day3 | 不赖</title>
   
 
 
@@ -104,7 +103,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Task1-Skiplist-Memtable"><span class="nav-number">1.</span> <span class="nav-text">Task1: Skiplist Memtable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task2-A-Single-Memtable-in-the-Engie"><span class="nav-number">2.</span> <span class="nav-text">Task2: A Single Memtable in the Engie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task3-Write-Path-Freezing-a-Memtable"><span class="nav-number">3.</span> <span class="nav-text">Task3: Write Path - Freezing a Memtable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task4"><span class="nav-number">4.</span> <span class="nav-text">Task4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">思考题</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-1-Block-Builder"><span class="nav-number">1.</span> <span class="nav-text">Task 1: Block Builder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-2-Block-Iterator"><span class="nav-number">2.</span> <span class="nav-text">Task 2: Block Iterator</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -149,7 +148,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/13/mini-lsm%20week1day1/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/07/week1-day3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -162,12 +161,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Mini-LSM Week1 Day1 | 不赖">
+      <meta itemprop="name" content="Mini-LSM Week1 Day3 | 不赖">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Mini-LSM Week1 Day1
+          Mini-LSM Week1 Day3
         </h1>
 
         <div class="post-meta-container">
@@ -178,14 +177,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2025-02-13 23:04:33" itemprop="dateCreated datePublished" datetime="2025-02-13T23:04:33+08:00">2025-02-13</time>
+      <time title="Created: 2025-03-07 01:57:13" itemprop="dateCreated datePublished" datetime="2025-03-07T01:57:13+08:00">2025-03-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-02-16 03:13:47" itemprop="dateModified" datetime="2025-02-16T03:13:47+08:00">2025-02-16</time>
+      <time title="Modified: 2025-03-23 16:52:31" itemprop="dateModified" datetime="2025-03-23T16:52:31+08:00">2025-03-23</time>
     </span>
 
   
@@ -197,39 +196,12 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h3 id="Task1-Skiplist-Memtable"><a href="#Task1-Skiplist-Memtable" class="headerlink" title="Task1: Skiplist Memtable"></a>Task1: Skiplist Memtable</h3><p>task1主要实现了 memtable 的相关操作，比较简单。</p>
-<p>较为值得注意的事情是用了两个库: Bytes and Crossbeam skiplist, 其中 crossbeam 的跳表是线程安全的，这意味在 task2 中实现多线程的读写锁部分的时候无需获取写锁，使用读锁即可</p>
-<h3 id="Task2-A-Single-Memtable-in-the-Engie"><a href="#Task2-A-Single-Memtable-in-the-Engie" class="headerlink" title="Task2: A Single Memtable in the Engie"></a>Task2: A Single Memtable in the Engie</h3><p>先理清一下 mini-lsm 的结构关系：</p>
-<p>Mini-lsm –&gt; LsmStorageInner –&gt; LsmStorageState</p>
-<p>LsmStorageState中存储有 memtable 和 SStable</p>
-<p>task2 实现了 LsmStorageInner 中的 get put 和 delete 方法，由于更新都会在 memtable 中更新，因此只需要调用 task1 中实现的方法即可。</p>
-<p>get 方法需要跳过空 value 值</p>
-<p>为了保证线程安全，这里显而需要加一个读写锁，然而需要注意的是 put 和 delete 方法都不需要加写锁，原因如上所示。</p>
-<p>但我认为这里使用读锁仍然可能会出现一个问题：你无法保证put的调用顺序和你期望的一致，因为不同线程花费的时间可能不一样？</p>
-<p>P.S. 无法保证一致</p>
-<h3 id="Task3-Write-Path-Freezing-a-Memtable"><a href="#Task3-Write-Path-Freezing-a-Memtable" class="headerlink" title="Task3: Write Path - Freezing a Memtable"></a>Task3: Write Path - Freezing a Memtable</h3><p>task3 主要描述了 freeze memtable 的策略，当 memtable 的 approximate size 大于一个参数的时候，需要冻结到 immutable_memtables 里。</p>
-<p>具体冻结策略的原因可以在官网上查看，总之我们需要实现一个针对 LsmStorageInner 的互斥锁来确保不会有空的 memtable被冻结过去。</p>
-<h3 id="Task4"><a href="#Task4" class="headerlink" title="Task4"></a>Task4</h3><p>纯水</p>
-<h3 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h3><ul>
-<li>为什么memtable中不提供delete api？</li>
-</ul>
-<p>我认为是因为在当前memtable中delete掉了后，如果在之前的memtable或sstable中存在这个key，无法确认是否被delete掉了</p>
-<ul>
-<li>还有啥数据结构当memtable？</li>
-</ul>
-<p>有序的都行，平衡树啥的乱七八糟的</p>
-<ul>
-<li>为什么还要一个互斥锁？</li>
-</ul>
-<p>上面说的很清楚了</p>
-<ul>
-<li>parking_lot的锁</li>
-</ul>
-<p>是公平锁，但可能发生读锁，不要在单线程内递归获取读锁。</p>
-<ul>
-<li>冻结了memtable之后其他线程还能往新刷进去的memtable里写么？</li>
-</ul>
-<p>显然不能，冻结的时候获取写锁了，肯定所有读锁都释放了</p>
+    <div class="post-body" itemprop="articleBody"><h3 id="Task-1-Block-Builder"><a href="#Task-1-Block-Builder" class="headerlink" title="Task 1: Block Builder"></a>Task 1: Block Builder</h3><p>Block 仅存在于磁盘上， 他是一个 sstable 的单位，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">----------------------------------------------------------------------------------------------------</span><br><span class="line">|             Data Section             |              Offset Section             |      Extra      |</span><br><span class="line">----------------------------------------------------------------------------------------------------</span><br><span class="line">| Entry #1 | Entry #2 | ... | Entry #N | Offset #1 | Offset #2 | ... | Offset #N | num_of_elements |</span><br><span class="line">----------------------------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-----------------------------------------------------------------------</span><br><span class="line">|                           Entry #1                            | ... |</span><br><span class="line">-----------------------------------------------------------------------</span><br><span class="line">| key_len (2B) | key (keylen) | value_len (2B) | value (varlen) | ... |</span><br><span class="line">-----------------------------------------------------------------------</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如上所示，我们需要确定每个 keylen valuelen， offset 都是 u16，这样就可以轻松计算整个 block 的大小和每个 pair 所处的位置了。 </p>
+<p>然而需要注意的是，block 里的 Key 在 W1D7 之后就会被替换成和 first_key 不重叠的部分（首部不重叠），当然 first_key 仍旧会是完整的。</p>
+<h3 id="Task-2-Block-Iterator"><a href="#Task-2-Block-Iterator" class="headerlink" title="Task 2: Block Iterator"></a>Task 2: Block Iterator</h3><p>非常简单，Block 内部数据是有序的，直接二分查找就行，而且应当是无重叠的。</p>
 
     </div>
 
@@ -238,19 +210,16 @@
     
 
     <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/Mini-LSM/" rel="tag"># Mini-LSM</a>
-          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/2025/02/17/week1-day2/" rel="prev" title="Mini-LSM Week1 Day2">
+                  <i class="fa fa-angle-left"></i> Mini-LSM Week1 Day2
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2025/02/16/wekk1-day7/" rel="next" title="Mini-LSM Week1 Day7">
-                  Mini-LSM Week1 Day7 <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
